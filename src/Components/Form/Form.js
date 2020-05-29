@@ -87,8 +87,8 @@ class Form extends Component {
             </div>
 
              <div className='Form-buttons'>
-                <button onClick={this.cancelAndClear}>Cancel</button>
-                <button onClick={this.addToInventory}>Add to Inventory</button>
+                <button className='form-buttons' onClick={this.cancelAndClear}>Cancel</button>
+                <button className='form-buttons' onClick={this.addToInventory}>Add to Inventory</button>
             </div> 
             
         </div>

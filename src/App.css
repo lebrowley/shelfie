@@ -15,7 +15,7 @@
 }
 
 .Form-box {
-  height: 500px;
+  height: 400px;
   width: 500px;
   background-color: #3AD886;
   margin-top: 50px;
@@ -41,13 +41,18 @@
 
 .Form-buttons {
   display: flex;
-  justify-content: space-around ;
+  justify-content: space-around;
+}
+
+.form-buttons {
+  background-color: #ED6B5A;
+  margin-top: 25px;
 }
 
 /*-------------------------------------------------Dashboard---*/
 
 .Product-boxes {
-  background-color: #AB2A19;
+  background-color: #D34735;
   height: 300px;
   width: 400px;
   margin: 15px;
