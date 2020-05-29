@@ -10,11 +10,14 @@ class Form extends Component {
             price: 0,
             imgurl: ''
         }
+        
+        this.cancelAndClear = this.cancelAndClear.bind(this)
+        this.addToInventory = this.addToInventory.bind(this)
     }
 
     //handle changes (one for each input)
-    updateImage(img){
-        this.setState({imgurl: img})
+    updateImage(imgurl){
+        this.setState({imgurl: imgurl})
     }
 
     updateName(name){
@@ -26,13 +29,16 @@ class Form extends Component {
     }
 
     //post new product to database 
+    //use this.props.getInventoryFn (from App.js) in this function??
+    //how to get the inputs to be the body values sent on this post request?? 
     addToInventory(name, price, img){
         axios.post('/api/product', {name, price, img})
         .then(res => {
-
+            
         })
-
-        //use props getInventoryFn
+        .catch(res => {
+            console.log('error adding to inventory')
+        })
     }
 
     //clear input boxes
@@ -43,27 +49,34 @@ class Form extends Component {
     }
 
     render() {
+        const {name, price, imgurl} = this.state
+
+        //getting the user's url to preview?? 
         return (
         <div className='Form-box'>
 
             <img 
                 className='Form-image'
-                src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSp4gNi8GXkEdS-wNV9qN1ZJ-i3N_gKtjzz__oFcm6SBKsZNAA-&usqp=CAU'/>
+                src={imgurl ?
+                    {imgurl}
+                    :
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSp4gNi8GXkEdS-wNV9qN1ZJ-i3N_gKtjzz__oFcm6SBKsZNAA-&usqp=CAU'}
+                alt='form-preview'/>
 
             <div className='Form-input'>
                 Image URL:
                 <input className='input'
-                    value= {this.state.imgurl}
+                    value= {imgurl}
                     onChange={ (e) => this.updateImage(e.target.value)}    
                 />
                 Product Name: 
                 <input className='input'
-                    value= {this.state.name}
+                    value= {name}
                     onChange= { (e) => this.updateName(e.target.value)}
                 />
                 Price: 
                 <input className='input'
-                    value= {this.state.price}                    
+                    value= {price}                    
                     onChange= { (e) => this.updatePrice(e.target.value)}
                 />
             </div>

@@ -1,9 +1,13 @@
 
 .Header {
   background-color: #AB2A19;
-  height: 50px;
+  height: 75px;
   padding-left: 45px;
+  color: white;
+  text-transform: uppercase;
 }
+
+/*-------------------------------------------------Form---*/
 
 .Dash-Form-Home {
   display: flex;
@@ -20,6 +24,8 @@
 
 .Form-image {
   padding-left: 100px;
+  height: 200px;
+  width: 300px;
 }
 
 
@@ -37,3 +43,33 @@
   display: flex;
   justify-content: space-around ;
 }
+
+/*-------------------------------------------------Dashboard---*/
+
+.Product-boxes {
+  background-color: #AB2A19;
+  height: 300px;
+  width: 400px;
+  margin: 15px;
+}
+
+.product-image {
+  padding: 10px;
+}
+
+.product-name-price {
+  text-transform: uppercase;
+}
+
+.dash-buttons-box {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  
+}
+
+.dash-buttons {
+  background-color: #3AD886;
+  border-radius: 5px;
+}
+

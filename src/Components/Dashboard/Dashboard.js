@@ -4,9 +4,9 @@ import Product from '../Product/Product';
 //the render isn't working--- 
 class Dashboard extends Component {
     render() {
-        const {productList} = this.props
+        const {productList} = this.props //from App.js
         return (
-            <div>Dashboard
+            <div className='Dashboard-box'>
                 {productList.map(product => (
                     <Product
                         key={product.id}
@@ -15,6 +15,7 @@ class Dashboard extends Component {
                         productImage={product.img}
                     />
                 ))}
+
             </div>
         )
     }
