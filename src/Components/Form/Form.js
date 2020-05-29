@@ -16,25 +16,30 @@ class Form extends Component {
     }
 
     //handle changes (one for each input)
-    updateImage(imgurl){
-        this.setState({imgurl: imgurl})
+    updateImage(value){
+        this.setState({imgurl: value})
     }
 
-    updateName(name){
-        this.setState({name: name})
+    updateName(value){
+        this.setState({name: value})
     }
 
-    updatePrice(price){
-        this.setState({price: price})
+    updatePrice(value){
+        this.setState({price: value})
     }
 
     //post new product to database 
     //use this.props.getInventoryFn (from App.js) in this function??
-    //how to get the inputs to be the body values sent on this post request?? 
-    addToInventory(name, price, img){
+    //how to get the new product to display through using the prop that passed down the componentDidMount from App.js (which is getting all the products to display them)??
+    addToInventory(){
+        const {name, price, img} = this.state
+        const {getInventoryFn} = this.props
         axios.post('/api/product', {name, price, img})
         .then(res => {
-            
+            console.log('success')
+        })
+        .then( () => {
+            getInventoryFn()
         })
         .catch(res => {
             console.log('error adding to inventory')
@@ -42,6 +47,7 @@ class Form extends Component {
     }
 
     //clear input boxes
+    //getting the boxes to clear when the Add to Inventory button is clicked too
     cancelAndClear(){
         this.setState(
             {name: '', price: 0, imgurl: ''}
@@ -51,22 +57,21 @@ class Form extends Component {
     render() {
         const {name, price, imgurl} = this.state
 
-        //getting the user's url to preview?? 
+        //getting the user's url to preview?? using a ternary possibly...
+        //getting the image to be added to the database as a text string, not the value null...ie getting the image added through the input box to display as an image....
         return (
         <div className='Form-box'>
 
             <img 
                 className='Form-image'
-                src={imgurl ?
-                    {imgurl}
-                    :
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSp4gNi8GXkEdS-wNV9qN1ZJ-i3N_gKtjzz__oFcm6SBKsZNAA-&usqp=CAU'}
+                src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSp4gNi8GXkEdS-wNV9qN1ZJ-i3N_gKtjzz__oFcm6SBKsZNAA-&usqp=CAU'
                 alt='form-preview'/>
 
             <div className='Form-input'>
                 Image URL:
                 <input className='input'
                     value= {imgurl}
+                    type='text'
                     onChange={ (e) => this.updateImage(e.target.value)}    
                 />
                 Product Name: 

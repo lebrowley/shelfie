@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Product extends Component {
     render() {
-        const {productName, productPrice, productImage} = this.props
+        const {productId, productName, productPrice, productImage, deleteProductFn} = this.props //from Dashboard.js which is receiving them from App.js
         return (
             <div className='Product-boxes'>
                 <img 
@@ -16,13 +16,14 @@ class Product extends Component {
 
                 <div className='dash-buttons-box'>
                     <button 
-                        className='dash-buttons'>
-                        
-                    Delete</button>
+                        className='dash-buttons'
+                        onClick={() => deleteProductFn(productId)}
+                    >Delete</button>
+
                     <button 
                         className='dash-buttons'>
                         
-                    Cancel</button>
+                    Edit</button>
                 </div>
             </div>
         )

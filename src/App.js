@@ -13,6 +13,7 @@ class App extends Component {
         inventory: []
       }
       this.componentDidMount = this.componentDidMount.bind(this)
+      this.deleteProduct = this.deleteProduct.bind(this)
     }
 
     //get inventory from database
@@ -24,13 +25,27 @@ class App extends Component {
       .catch(res => console.log('error getting products for inventory')) 
     } 
 
+    deleteProduct(id){
+      axios.delete(`api/products/${id}`)
+      .then(res => {
+        this.setState({inventory: res.data})
+        console.log('successfully deleted')
+      })
+      .catch(res => {
+        console.log('error deleting product')
+      })
+    }
+
     render() {
       return (
         <div>
           <Header/>
 
           <div className='Dash-Form-Home'>
-          <Dashboard productList={this.state.inventory}/>
+          <Dashboard 
+              productList={this.state.inventory}
+              deleteProductFn={this.state.deleteProduct}  
+          />
           <Form getInventoryFn={this.state.componentDidMount}/>
 
           </div>
