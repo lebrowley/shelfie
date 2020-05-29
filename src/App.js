@@ -19,17 +19,23 @@ class App extends Component {
     componentDidMount(){
       axios.get('/api/inventory')
       .then(res => {
-        this.setState({inventory: res.data})
+        console.log(res.data)
+        // this.setState({inventory: res.data})
       })
-      .catch(res => console.log('error getting products for inventory')) //catch is firing.....
+      .catch(res => console.log('error getting products for inventory')) 
     }
 
     render() {
       return (
         <div>
           <Header/>
+
+          <div className='Dash-Form-Home'>
           <Dashboard productList={this.state.inventory}/>
           <Form getInventoryFn={this.state.componentDidMount}/>
+
+          </div>
+          
   
         </div>
       )

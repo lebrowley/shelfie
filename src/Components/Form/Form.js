@@ -10,18 +10,11 @@ class Form extends Component {
             price: 0,
             imgurl: ''
         }
-
-        this.updateImage = this.updateImage.bind(this)
-        this.updateName = this.updateName.bind(this)
-        this.updatePrice = this.updatePrice.bind(this)
-        this.addToInventory = this.addToInventory.bind(this)
-        this.cancelAndClear = this.cancelAndClear.bind(this)
-        //or write all these methods as arrow functions
     }
 
     //handle changes (one for each input)
-    updateImage(url){
-        this.setState({imgurl: url})
+    updateImage(img){
+        this.setState({imgurl: img})
     }
 
     updateName(name){
@@ -33,39 +26,53 @@ class Form extends Component {
     }
 
     //post new product to database 
-    addToInventory(name, price, url){
-        axios.post('/api/product', {name, price, url})
+    addToInventory(name, price, img){
+        axios.post('/api/product', {name, price, img})
+        .then(res => {
+
+        })
 
         //use props getInventoryFn
     }
 
     //clear input boxes
     cancelAndClear(){
-        //reset the input boxes to their original state values
+        this.setState(
+            {name: '', price: 0, imgurl: ''}
+        )
     }
 
     render() {
         return (
-        <div className='Form-box'>Form
-            <div className='Form-input'> 
-                <input
+        <div className='Form-box'>
+
+            <img 
+                className='Form-image'
+                src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSp4gNi8GXkEdS-wNV9qN1ZJ-i3N_gKtjzz__oFcm6SBKsZNAA-&usqp=CAU'/>
+
+            <div className='Form-input'>
+                Image URL:
+                <input className='input'
                     value= {this.state.imgurl}
                     onChange={ (e) => this.updateImage(e.target.value)}    
                 />
-                <input
+                Product Name: 
+                <input className='input'
                     value= {this.state.name}
                     onChange= { (e) => this.updateName(e.target.value)}
                 />
-                <input
-                    value= {this.state.price}
+                Price: 
+                <input className='input'
+                    value= {this.state.price}                    
                     onChange= { (e) => this.updatePrice(e.target.value)}
                 />
-                <div className='Form-buttons'>
-                    <button onClick={this.cancelAndClear}>Cancel</button>
-                    <button onClick={this.addToInventory}>Add to Inventory</button>
-                </div> 
             </div>
 
+             <div className='Form-buttons'>
+                <button onClick={this.cancelAndClear}>Cancel</button>
+                <button onClick={this.addToInventory}>Add to Inventory</button>
+            </div> 
+            
         </div>
            
         )
