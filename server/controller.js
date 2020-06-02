@@ -24,7 +24,7 @@ module.exports = {
     }, 
 
     //DELETE
-    deleteProduct: (res, req) => {
+    deleteProduct: (req, res) => {
         const dbInstance = req.app.get('db')
         const {id} = req.params
 
