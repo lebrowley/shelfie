@@ -8,7 +8,7 @@ class Form extends Component {
         this.state = {
             name: '',
             price: 0,
-            imgurl: ''
+            imgurl: '',
         }
         
         this.cancelAndClear = this.cancelAndClear.bind(this)
@@ -29,25 +29,42 @@ class Form extends Component {
     }
 
     //post new product to database 
-    //use this.props.getInventoryFn (from App.js) in this function??
-    //how to get the new product to display through using the prop that passed down the componentDidMount from App.js (which is getting all the products to display them)??
     addToInventory(){
-        const {name, price, img} = this.state
-        const {getInventoryFn} = this.props
-        axios.post('/api/product', {name, price, img})
+        const {name, price, imgurl} = this.state
+        const body = {name: name, price: price, img: imgurl}
+        
+        axios.post('/api/product', body)
         .then(res => {
-            console.log('success')
-        })
-        .then( () => {
+            const {getInventoryFn} = this.props
+
             getInventoryFn()
+            this.cancelAndClear()
+            console.log('success adding to inventory')
         })
         .catch(res => {
             console.log('error adding to inventory')
         })
     }
 
+    //edit a product
+    updateProduct(id){
+        const {name, price, imgurl} = this.state
+        const body = {name: name, price: price, img: imgurl}
+
+        axios.put(`/api/product/${id}`, body)
+        .then(res => {
+            const {getInventoryFn} = this.props
+
+            getInventoryFn()
+            this.cancelAndClear()
+            console.log('success editing a product')
+        })
+        .catch(res => {
+            console.log('error editing product')
+        })
+    }
+
     //clear input boxes
-    //getting the boxes to clear when the Add to Inventory button is clicked too
     cancelAndClear(){
         this.setState(
             {name: '', price: 0, imgurl: ''}
@@ -68,20 +85,19 @@ class Form extends Component {
                 alt='form-preview'/>
 
             <div className='Form-input'>
-                Image URL:
+                <label>Image URL:</label>
                 <input className='input'
                     value= {imgurl}
-                    type='text'
                     onChange={ (e) => this.updateImage(e.target.value)}    
                 />
-                Product Name: 
+                <label>Product Name:</label> 
                 <input className='input'
                     value= {name}
                     onChange= { (e) => this.updateName(e.target.value)}
                 />
-                Price: 
+                <label>Price:</label>
                 <input className='input'
-                    value= {price}                    
+                    defaultValue= {price}                    
                     onChange= { (e) => this.updatePrice(e.target.value)}
                 />
             </div>

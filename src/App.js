@@ -10,7 +10,8 @@ class App extends Component {
       super()
       
       this.state = {
-        inventory: []
+        inventory: [],
+        isEditing: false
       }
       this.componentDidMount = this.componentDidMount.bind(this)
       this.deleteProduct = this.deleteProduct.bind(this)
@@ -26,9 +27,10 @@ class App extends Component {
     } 
 
     deleteProduct(id){
-      axios.delete(`api/products/${id}`)
+      axios.delete(`api/product/${id}`)
       .then(res => {
         this.setState({inventory: res.data})
+        this.componentDidMount()  //there needs to be something to call the new inventory after the delete happens so that it can be passed down to Product in its new state for rendering; somehow reset the server so that things can repopulate?? the delete IS happening behind the scenes.... but it's crashing on the display
         console.log('successfully deleted')
       })
       .catch(res => {
@@ -37,6 +39,7 @@ class App extends Component {
     }
 
     render() {
+      
       return (
         <div>
           <Header/>
@@ -44,9 +47,11 @@ class App extends Component {
           <div className='Dash-Form-Home'>
           <Dashboard 
               productList={this.state.inventory}
-              deleteProductFn={this.state.deleteProduct}  
+              isEditing={this.state.isEditing}
+              deleteProductFn={this.deleteProduct} 
           />
-          <Form getInventoryFn={this.state.componentDidMount}/>
+          <Form getInventoryFn={this.componentDidMount}
+          />
 
           </div>
           
