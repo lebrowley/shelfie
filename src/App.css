@@ -56,10 +56,26 @@
   height: 300px;
   width: 400px;
   margin: 15px;
+  
+}
+
+.product-info {
+  display: flex;
+}
+
+.product-label {
+  display: flex;
+  font-weight: 600;
+}
+
+.name {
+  font-size: 20px;
 }
 
 .product-image {
   padding: 10px;
+  max-height: 225px;
+  max-width: 320x;
 }
 
 .product-name-price {
