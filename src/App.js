@@ -10,32 +10,29 @@ class App extends Component {
       super()
       
       this.state = {
-        inventory: [],
-        isEditing: false
+        inventory: [],    //{id, name, price, img}, {id, name, price, img}...
+        selectedProduct: {}  //created in Product.js on Edit button
       }
-      this.componentDidMount = this.componentDidMount.bind(this)
-      this.deleteProduct = this.deleteProduct.bind(this)
+      this.getInventory = this.getInventory.bind(this)
+      this.updateSelectedProduct = this.updateSelectedProduct.bind(this)
     }
 
     //get inventory from database
     componentDidMount(){
+      this.getInventory()
+    } 
+
+    getInventory() {  //returns with the array of objects
       axios.get('/api/inventory')
       .then(res => {
         this.setState({inventory: res.data})
       })
-      .catch(res => console.log('error getting products for inventory')) 
-    } 
+      .catch(res => console.log('error getting products for inventory'))
+    }
 
-    deleteProduct(id){
-      axios.delete(`api/product/${id}`)
-      .then(res => {
-        this.setState({inventory: res.data})
-        this.componentDidMount()  //there needs to be something to call the new inventory after the delete happens so that it can be passed down to Product in its new state for rendering; somehow reset the server so that things can repopulate?? the delete IS happening behind the scenes.... but it's crashing on the display
-        console.log('successfully deleted')
-      })
-      .catch(res => {
-        console.log('error deleting product')
-      })
+    //create selectedProduct object to pass to Form.js so inputs can be changed/updated through componentDidMount/Save Changes button
+    updateSelectedProduct(productToBeEdited) {
+      this.setState({selectedProduct: productToBeEdited})
     }
 
     render() {
@@ -47,15 +44,14 @@ class App extends Component {
           <div className='Dash-Form-Home'>
           <Dashboard 
               productList={this.state.inventory}
-              isEditing={this.state.isEditing}
-              deleteProductFn={this.deleteProduct} 
+              getInventory={this.getInventory}   
+              updateSelectedProduct={this.updateSelectedProduct} 
           />
-          <Form getInventoryFn={this.componentDidMount}
+          <Form getInventory={this.getInventory} 
+                selectedProduct={this.state.selectedProduct}
           />
-
           </div>
-          
-  
+
         </div>
       )
     }

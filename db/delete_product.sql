@@ -1,2 +1,4 @@
 DELETE FROM products
-WHERE id = $1; 
+WHERE id = $1;
+
+-- returning id??

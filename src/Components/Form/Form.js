@@ -9,23 +9,39 @@ class Form extends Component {
             name: '',
             price: 0,
             imgurl: '',
+            editProductId: null
         }
         
-        this.cancelAndClear = this.cancelAndClear.bind(this)
+        this.componentDidUpdate = this.componentDidUpdate.bind(this)
+        this.handleInput = this.handleInput.bind(this)
+        this.reset = this.reset.bind(this)
         this.addToInventory = this.addToInventory.bind(this)
+        this.updateProduct = this.updateProduct.bind(this)
     }
 
-    //handle changes (one for each input)
-    updateImage(value){
-        this.setState({imgurl: value})
+    //compares the previous values of Props to the current values of Props. if the ids of the selectedProduct do not match, set state to current props values
+    componentDidUpdate(prevProps, prevState) {
+        // console.log(prevProps, prevState)
+        console.log(`old product id is ${prevProps.selectedProduct.id} and new product id is ${this.props.selectedProduct.id}`)
+        if(prevProps.selectedProduct.id !== this.props.selectedProduct.id) {
+            console.log('new product selected')
+            this.setState({
+                name: this.props.selectedProduct.name,
+                price: this.props.selectedProduct.price,
+                imgurl: this.props.selectedProduct.img,
+                editProductId: this.props.selectedProduct.id
+            })
+        }
     }
 
-    updateName(value){
-        this.setState({name: value})
+    handleInput(e) {
+        this.setState({[e.target.name]: e.target.value})
     }
 
-    updatePrice(value){
-        this.setState({price: value})
+    //clear input boxes
+    //somewhere something is still off- price doesn't not reset to 0 with the cancel button
+    reset(){
+        this.setState({name: '', price: 0, imgurl: '', editProductId: null})
     }
 
     //post new product to database 
@@ -35,10 +51,8 @@ class Form extends Component {
         
         axios.post('/api/product', body)
         .then(res => {
-            const {getInventoryFn} = this.props
-
-            getInventoryFn()
-            this.cancelAndClear()
+            this.props.getInventory()
+            this.reset()
             console.log('success adding to inventory')
         })
         .catch(res => {
@@ -47,16 +61,14 @@ class Form extends Component {
     }
 
     //edit a product
-    updateProduct(id){
-        const {name, price, imgurl} = this.state
+    updateProduct(){
+        const {name, price, imgurl, editProductId} = this.state
         const body = {name: name, price: price, img: imgurl}
 
-        axios.put(`/api/product/${id}`, body)
+        axios.put(`/api/product/${editProductId}`, body)
         .then(res => {
-            const {getInventoryFn} = this.props
-
-            getInventoryFn()
-            this.cancelAndClear()
+            this.props.getInventory()
+            this.reset()
             console.log('success editing a product')
         })
         .catch(res => {
@@ -64,18 +76,10 @@ class Form extends Component {
         })
     }
 
-    //clear input boxes
-    cancelAndClear(){
-        this.setState(
-            {name: '', price: 0, imgurl: ''}
-        )
-    }
-
     render() {
         const {name, price, imgurl} = this.state
 
-        //getting the user's url to preview?? using a ternary possibly...
-        //getting the image to be added to the database as a text string, not the value null...ie getting the image added through the input box to display as an image....
+        //how to get the user's img url to preview
         return (
         <div className='Form-box'>
 
@@ -87,24 +91,32 @@ class Form extends Component {
             <div className='Form-input'>
                 <label>Image URL:</label>
                 <input className='input'
+                    name='imgurl'
                     value= {imgurl}
-                    onChange={ (e) => this.updateImage(e.target.value)}    
+                    onChange={this.handleInput}    
                 />
                 <label>Product Name:</label> 
                 <input className='input'
+                    name='name'
                     value= {name}
-                    onChange= { (e) => this.updateName(e.target.value)}
+                    onChange= {this.handleInput}
                 />
                 <label>Price:</label>
                 <input className='input'
+                    name='price'
                     defaultValue= {price}                    
-                    onChange= { (e) => this.updatePrice(e.target.value)}
+                    onChange= {this.handleInput}
                 />
             </div>
 
              <div className='Form-buttons'>
-                <button className='form-buttons' onClick={this.cancelAndClear}>Cancel</button>
-                <button className='form-buttons' onClick={this.addToInventory}>Add to Inventory</button>
+                <button className='form-buttons' onClick={this.reset}>Cancel</button>
+
+                {this.state.editProductId ? (
+                    <button className='form-buttons' onClick={this.updateProduct}>Save Changes</button>
+                ) : (
+                    <button className='form-buttons' onClick={this.addToInventory}>Add to Inventory</button>
+                )}
             </div> 
             
         </div>
