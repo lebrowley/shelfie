@@ -15,6 +15,4 @@ function App() {
   );
 }
 
-const mapStateToProps = reduxState => reduxState
-
 export default App; 
