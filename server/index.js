@@ -15,6 +15,7 @@ app.get('/api/inventory', control.getProducts);
 app.post('/api/product', control.newProduct);
 app.delete('/api/product/:id', control.deleteProduct);
 app.put('/api/product/:id', control.updateProduct)
+app.get('api/product/id', control.getProduct)
 
 
 //---------------------------------------------DB and Server Connection-------------------------//

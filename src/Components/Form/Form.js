@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 class Form extends Component {
     constructor() {
@@ -7,31 +8,16 @@ class Form extends Component {
 
         this.state = {
             name: '',
-            price: 0,
+            price: '',
             imgurl: '',
             editProductId: null
         }
         
-        this.componentDidUpdate = this.componentDidUpdate.bind(this)
+        // this.componentDidUpdate = this.componentDidUpdate.bind(this)
         this.handleInput = this.handleInput.bind(this)
         this.reset = this.reset.bind(this)
         this.addToInventory = this.addToInventory.bind(this)
         this.updateProduct = this.updateProduct.bind(this)
-    }
-
-    //compares the previous values of Props to the current values of Props. if the ids of the selectedProduct do not match, set state to current props values
-    componentDidUpdate(prevProps, prevState) {
-        // console.log(prevProps, prevState)
-        console.log(`old product id is ${prevProps.selectedProduct.id} and new product id is ${this.props.selectedProduct.id}`)
-        if(prevProps.selectedProduct.id !== this.props.selectedProduct.id) {
-            console.log('new product selected')
-            this.setState({
-                name: this.props.selectedProduct.name,
-                price: this.props.selectedProduct.price,
-                imgurl: this.props.selectedProduct.img,
-                editProductId: this.props.selectedProduct.id
-            })
-        }
     }
 
     handleInput(e) {
@@ -41,7 +27,7 @@ class Form extends Component {
     //clear input boxes
     //somewhere something is still off- price doesn't not reset to 0 with the cancel button
     reset(){
-        this.setState({name: '', price: 0, imgurl: '', editProductId: null})
+        this.setState({name: '', price: '', imgurl: '', editProductId: null})
     }
 
     //post new product to database 
@@ -51,9 +37,9 @@ class Form extends Component {
         
         axios.post('/api/product', body)
         .then(res => {
-            this.props.getInventory()
             this.reset()
             console.log('success adding to inventory')
+            alert('Success!')
         })
         .catch(res => {
             console.log('error adding to inventory')
@@ -67,7 +53,6 @@ class Form extends Component {
 
         axios.put(`/api/product/${editProductId}`, body)
         .then(res => {
-            this.props.getInventory()
             this.reset()
             console.log('success editing a product')
         })
@@ -75,6 +60,29 @@ class Form extends Component {
             console.log('error editing product')
         })
     }
+
+    //get one product to edit
+    getProduct() {
+        axios.get(`api/product/${this.props.match.params.id}`)
+        .then(res => {
+            this.setState({name: res.data.name, price: res.data.price, imgurl: res.data.img})
+        })
+    }
+
+  //compares the previous values of Props to the current values of Props. if the ids of the selectedProduct do not match, set state to current props values
+    // componentDidUpdate(prevProps, prevState) {
+    //     // console.log(prevProps, prevState)
+    //     console.log(`old product id is ${prevProps.selectedProduct.id} and new product id is ${this.props.selectedProduct.id}`)
+    //     if(prevProps.selectedProduct.id !== this.props.selectedProduct.id) {
+    //         console.log('new product selected')
+    //         this.setState({
+    //             name: this.props.selectedProduct.name,
+    //             price: this.props.selectedProduct.price,
+    //             imgurl: this.props.selectedProduct.img,
+    //             editProductId: this.props.selectedProduct.id
+    //         })
+    //     }
+    // }
 
     render() {
         const {name, price, imgurl} = this.state
@@ -103,6 +111,7 @@ class Form extends Component {
                 />
                 <label>Price:</label>
                 <input className='input'
+                    placeholder='0'
                     name='price'
                     defaultValue= {price}                    
                     onChange= {this.handleInput}
@@ -110,10 +119,10 @@ class Form extends Component {
             </div>
 
              <div className='Form-buttons'>
-                <button className='form-buttons' onClick={this.reset}>Cancel</button>
+                <button className='form-buttons' onClick={this.reset}><Link to='/'>Cancel</Link></button>
 
                 {this.state.editProductId ? (
-                    <button className='form-buttons' onClick={this.updateProduct}>Save Changes</button>
+                    <button className='form-buttons' onClick={this.updateProduct}><Link to='/'>Save Changes</Link></button>
                 ) : (
                     <button className='form-buttons' onClick={this.addToInventory}>Add to Inventory</button>
                 )}
